@@ -1,0 +1,21 @@
+#!/bin/bash -xe
+
+./bin/bundle -v --arch=$ARCH /root/source/buildroot-$CIRROS_VER-$ARCH.tar /root/source/linux-image-3.2.0-80-generic_3.2.0-80.116_amd64.deb stage/$ARCH
+
+IMAGES_DIR=/root/images
+PREFIX=cirros-$CIRROS_VER-$ARCH-watchdog
+
+cd "stage/$ARCH"
+
+ln blank.img $PREFIX-blank.img
+ln filesys.tar.gz $PREFIX-lxc.tar.gz
+ln disk.img $PREFIX-disk.img
+ln initramfs $PREFIX-initrd
+ln initramfs $PREFIX-initramfs
+ln kernel $PREFIX-vmlinuz
+ln kernel $PREFIX-kernel
+ln part.img $PREFIX-rootfs.img
+
+cp $PREFIX-kernel $PREFIX-initramfs $PREFIX-lxc.tar.gz $PREFIX-disk.img $IMAGES_DIR
+gzip -9 -c $PREFIX-rootfs.img > "$IMAGES_DIR/$PREFIX-rootfs.img.gz"
+tar cvzf - $PREFIX-blank.img $PREFIX-vmlinuz $PREFIX-initrd > "$IMAGES_DIR/$PREFIX-uec.tar.gz"

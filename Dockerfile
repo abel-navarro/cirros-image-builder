@@ -19,7 +19,7 @@ RUN apt-get update && apt-get install -y \
 	unzip \
 	wget
 
-RUN mkdir /root/build /root/source
+RUN mkdir /root/build /root/source /root/images
 
 RUN wget https://launchpad.net/ubuntu/+archive/primary/+files/linux-image-3.2.0-80-generic_3.2.0-80.116_amd64.deb -O /root/source/linux-image-3.2.0-80-generic_3.2.0-80.116_amd64.deb
 
@@ -29,4 +29,7 @@ RUN echo "i6300esb heartbeat=2 nowayout=1" >> /root/build/cirros-$CIRROS_VER/src
 
 RUN ( wget http://download.cirros-cloud.net/$CIRROS_VER/buildroot_rootfs/buildroot-$CIRROS_VER-$ARCH.tar.gz -O /root/source/buildroot-$CIRROS_VER-$ARCH.tar.gz && gunzip /root/source/buildroot-$CIRROS_VER-$ARCH.tar.gz )
 
-CMD ( cd /root/build/cirros-$CIRROS_VER && ./bin/bundle -v --arch=$ARCH /root/source/buildroot-$CIRROS_VER-$ARCH.tar /root/source/linux-image-3.2.0-80-generic_3.2.0-80.116_amd64.deb output/$ARCH/images )
+COPY build-images /usr/bin/
+RUN chmod +x /usr/bin/build-images
+
+CMD ( cd /root/build/cirros-$CIRROS_VER && build-images )
