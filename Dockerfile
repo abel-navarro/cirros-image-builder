@@ -27,6 +27,9 @@ RUN ( wget http://download.cirros-cloud.net/$CIRROS_VER/cirros-$CIRROS_VER-sourc
 
 RUN echo "i6300esb heartbeat=2 nowayout=1" >> /root/build/cirros-$CIRROS_VER/src/etc/modules
 
+RUN echo "CONFIG_HTTPD=y" >> /root/build/cirros-$CIRROS_VER/conf/busybox.config
+RUN echo "BR2_PACKAGE_TCPDUMP=y" >> /root/build/cirros-$CIRROS_VER/conf/buildroot-x86_64.config
+
 RUN ( wget http://download.cirros-cloud.net/$CIRROS_VER/buildroot_rootfs/buildroot-$CIRROS_VER-$ARCH.tar.gz -O /root/source/buildroot-$CIRROS_VER-$ARCH.tar.gz && gunzip /root/source/buildroot-$CIRROS_VER-$ARCH.tar.gz )
 
 COPY build-images /usr/bin/
